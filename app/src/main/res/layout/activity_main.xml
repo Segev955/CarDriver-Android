@@ -2,20 +2,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/nameEditText"
+    <TextView
+        android:id="@+id/nametxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Enter Name"
+        android:hint="Hello "
         android:layout_centerInParent="true"
         android:layout_marginBottom="16dp"/>
 
-    <EditText
-        android:id="@+id/carTypeEditText"
+    <TextView
+        android:id="@+id/carTypetxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Enter Car Type"
-        android:layout_below="@id/nameEditText"
+        android:hint="Your car is "
+        android:layout_below="@id/nametxt"
         android:layout_centerInParent="true"
         android:layout_marginBottom="16dp"/>
 
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:text="Start"
         android:onClick="startScript"
-        android:layout_below="@id/carTypeEditText"
+        android:layout_below="@id/carTypetxt"
         android:layout_centerInParent="true"
         android:drawableStart="@drawable/start_icon"
         android:layout_marginBottom="16dp"/>
