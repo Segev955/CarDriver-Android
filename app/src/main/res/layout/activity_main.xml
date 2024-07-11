@@ -51,5 +51,14 @@
         android:layout_marginTop="25dp"
         android:background="#D70909"/>
 
+    <TextView
+        android:id="@+id/statusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:layout_below="@id/shutdownButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
 
 </RelativeLayout>

@@ -25,6 +25,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit  var user: User
     private lateinit  var userId: String
 
+    private lateinit var statusTextView: TextView
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,21 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
+
+        statusTextView = findViewById(R.id.statusTextView)
+
+        // Listen for status updates
+        mDatabase.child("status").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val status = snapshot.getValue(String::class.java)
+                statusTextView.text = status
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle database error
+            }
+        })
+
 
         val currentUser = auth.currentUser
         if (currentUser != null) {
