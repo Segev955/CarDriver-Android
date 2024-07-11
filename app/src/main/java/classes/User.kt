@@ -15,6 +15,7 @@ class User {
     private var date: String? = null
     private var gender: String? = null
     private var carType: String? = null
+    private var status: String? = null
 
     constructor()
 
@@ -27,28 +28,39 @@ class User {
         this.date = date
         this.gender = gender
         this.carType = carType
+        this.status = "disconnected"
     }
 
     // ---- GETTERS ---- //
     fun getFullName(): String? {
-        return fullName
+        return this.fullName
     }
 
     fun getEmail(): String? {
-        return email
+        return this.email
     }
 
     fun getDate(): String? {
-        return date
+        return this.date
     }
 
     fun getGender(): String? {
-        return gender
+        return this.gender
     }
 
     fun getCarType(): String? {
-        return carType
+        return this.carType
     }
+    fun getStatus(): String? {
+        return this.status
+    }
+
+    // ---- SETTERS ---- //
+
+    fun updateStatus(status: String){
+        this.status = status
+    }
+
 
     companion object {
         // ---- END OF GET(ERS) & SET(ERS) ---- //

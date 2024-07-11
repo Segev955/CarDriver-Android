@@ -16,7 +16,7 @@ import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-    private lateinit var database: DatabaseReference
+    private lateinit var user_reference: DatabaseReference
     private lateinit var mDatabase: DatabaseReference
 
     private lateinit var nameTv: TextView
@@ -39,21 +39,10 @@ class MainActivity : AppCompatActivity() {
         carTypeTv = findViewById(R.id.carTypetxt)
 
         auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance().reference
+        user_reference = FirebaseDatabase.getInstance().reference.child("Users")
 
         statusTextView = findViewById(R.id.statusTextView)
 
-        // Listen for status updates
-        mDatabase.child("status").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val status = snapshot.getValue(String::class.java)
-                statusTextView.text = status
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle database error
-            }
-        })
 
 
         val currentUser = auth.currentUser
@@ -67,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchUserData(userId: String) {
-        val userRef = database.child("Users").child(userId)
+        val userRef = user_reference.child(userId)
 
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -84,6 +73,8 @@ class MainActivity : AppCompatActivity() {
                     nameTv.append("Hello "+user.getFullName())
                     carTypeTv.append("Your car is "+user.getCarType())
                     Toast.makeText(this@MainActivity, "User data loaded", Toast.LENGTH_SHORT).show()
+                    //Start listening for status updates
+                    statusListener()
                 } else {
                     Toast.makeText(this@MainActivity, "User data not found", Toast.LENGTH_SHORT).show()
                 }
@@ -117,5 +108,25 @@ class MainActivity : AppCompatActivity() {
     fun shutdownScript(view: View?) {
         mDatabase.child("commands").child("shutdown").setValue(true)
         mDatabase.child("commands").child("shutdown").setValue(false)
+    }
+
+    fun statusListener(){
+        mDatabase.child("status").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val status = snapshot.getValue(String::class.java)
+                if (status != null) {
+                    user.updateStatus(status)
+                    statusTextView.text = user.getStatus()
+                    user_reference.child(userId).setValue(user)
+                }
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@MainActivity, "Failed to load status: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+
     }
 }

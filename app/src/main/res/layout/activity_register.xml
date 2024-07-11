@@ -111,7 +111,7 @@
             android:id="@+id/gendertxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/gender_sym"
+            android:drawableLeft="@drawable/start_icon"
             android:layout_below="@id/carType"
             android:layout_margin="30dp"
             android:text="Gender:"
