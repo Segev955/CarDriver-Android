@@ -2,6 +2,7 @@ package com.example.cardriver
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var user_reference: DatabaseReference
     private lateinit var mDatabase: DatabaseReference
+
+    private lateinit var connectBtn: Button
 
     private lateinit var nameTv: TextView
     private lateinit var carTypeTv: TextView
@@ -86,13 +89,15 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun startScript(view: View?) {
-        val name = user.getFullName()
-        val carType = user.getCarType()
+    fun connectScript(view: View?) {
+        mDatabase.child("request").setValue(userId)
 
+    }
+    fun startScript(view: View?) {
+        val carType = user.getCarType()
         val commandData = mapOf(
             "start" to true,
-            "name" to name,
+            "uid" to userId,
             "carType" to carType
         )
 
@@ -111,13 +116,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun statusListener(){
-        mDatabase.child("status").addValueEventListener(object : ValueEventListener {
+        user_reference.child(userId).child("status").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val status = snapshot.getValue(String::class.java)
                 if (status != null) {
                     user.updateStatus(status)
                     statusTextView.text = user.getStatus()
-                    user_reference.child(userId).setValue(user)
                 }
 
 
