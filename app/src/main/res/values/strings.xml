@@ -6,4 +6,5 @@
     <string name="login">Login</string>
     <string name="default_web_client_id">YOUR_WEB_CLIENT_ID</string>
     <string name="sign_in">Sign in</string>
+    <string name="start">Start</string>
 </resources>

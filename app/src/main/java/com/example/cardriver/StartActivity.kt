@@ -109,7 +109,9 @@ class StartActivity : AppCompatActivity() {
                     )
                     Toast.makeText(this@StartActivity, "Login successful!", Toast.LENGTH_SHORT)
                         .show()
+                    finish()
                 }
+
             })
         }
 
@@ -128,6 +130,7 @@ class StartActivity : AppCompatActivity() {
     private fun signIn() {
         val signInIntent = gsc!!.signInIntent
         startActivityForResult(signInIntent, 1234)
+        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -143,6 +146,7 @@ class StartActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             val intent = Intent(applicationContext, MainActivity::class.java)
                             startActivity(intent)
+                            finish()
                         } else {
                             Toast.makeText(
                                 this@StartActivity,

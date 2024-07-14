@@ -15,6 +15,7 @@ class User {
     private var date: String? = null
     private var gender: String? = null
     private var carType: String? = null
+    private var connected_obd: String =""
     private var status: String? = null
 
     constructor()
@@ -28,7 +29,8 @@ class User {
         this.date = date
         this.gender = gender
         this.carType = carType
-        this.status = "disconnected"
+        this.status = ""
+        this.connected_obd = ""
     }
 
     // ---- GETTERS ---- //
@@ -51,14 +53,22 @@ class User {
     fun getCarType(): String? {
         return this.carType
     }
+
+    fun getConnected_obd(): String{
+        return this.connected_obd
+    }
+
     fun getStatus(): String? {
         return this.status
     }
 
     // ---- SETTERS ---- //
 
-    fun updateStatus(status: String){
+    fun setStatus(status: String){
         this.status = status
+    }
+    fun setConnectedObd(obd: String){
+        this.connected_obd = obd
     }
 
 

@@ -19,55 +19,48 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="16dp"/>
 
-    <TextView
-        android:id="@+id/chooseObdText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose OBD device"
-        android:layout_below="@id/carTypetxt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
-
-    <Spinner
-        android:id="@+id/obdSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/chooseObdText"
-        android:layout_centerInParent="true"/>
-
-    <EditText
-        android:id="@+id/obdKeyEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="OBD key"
-        android:inputType="textPassword"
-        android:drawableLeft="@drawable/ic_baseline_password_24"
-        android:layout_below="@id/obdSpinner"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="16dp"/>
 
     <Button
-        android:id="@+id/connectButton"
+        android:id="@+id/driveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect"
-        android:onClick="connectScript"
-        android:layout_below="@id/obdKeyEditText"
+        android:text="@string/start"
+        android:onClick="driveScript"
+        android:layout_below="@id/carTypetxt"
         android:layout_centerInParent="true"
         android:drawableStart="@drawable/start_icon"
         android:layout_marginBottom="16dp"/>
+
+
+    <Button
+        android:id="@+id/disconnectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="disconnect"
+        android:onClick="disconnectScript"
+        android:layout_below="@id/driveButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="#D70909"/>
+
+    <Button
+        android:id="@+id/shutdownButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shutdown"
+        android:onClick="shutdownScript"
+        android:layout_below="@id/disconnectButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="#D70909"/>
 
     <TextView
         android:id="@+id/statusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Status"
-        android:layout_below="@id/connectButton"
+        android:layout_below="@id/shutdownButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="19dp"/>
-
-
-
-
 
 </RelativeLayout>
