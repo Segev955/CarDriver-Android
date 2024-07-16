@@ -7,4 +7,6 @@
     <string name="default_web_client_id">YOUR_WEB_CLIENT_ID</string>
     <string name="sign_in">Sign in</string>
     <string name="start">Start</string>
+    <string name="shutdown">Shutdown</string>
+    <string name="disconnect">Disconnect</string>
 </resources>

@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var connectBtn: Button
 
     private lateinit var nameTv: TextView
-    private lateinit var carTypeTv: TextView
+//    private lateinit var carTypeTv: TextView
     private lateinit var statusTextView: TextView
 
     private lateinit var obdSpinner: Spinner
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         mDatabase = FirebaseDatabase.getInstance().reference
         nameTv = findViewById(R.id.nametxt)
-        carTypeTv = findViewById(R.id.carTypetxt)
+//        carTypeTv = findViewById(R.id.carTypetxt)
         statusTextView = findViewById(R.id.statusTextView)
         obdSpinner = findViewById(R.id.obdSpinner)
         obdKeyEditText = findViewById(R.id.obdKeyEditText)
@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                 if (snapshot.exists()) {
                     user = snapshot.getValue(User::class.java) ?: return
                     nameTv.append("Hello " + user.getFullName())
-                    carTypeTv.append("Your car is  ${user.getCarType()}")
+                    //carTypeTv.append("Your car is  ${user.getCarType()}")
                     statusListener()
                     obdConnectionListener()
                     Toast.makeText(this@MainActivity,"User data loaded", Toast.LENGTH_SHORT).show()

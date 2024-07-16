@@ -24,8 +24,9 @@ class DriveActivity : AppCompatActivity() {
     private  var is_driving = false
 
     private lateinit var nameTv: TextView
-    private lateinit var carTypeTv: TextView
+//    private lateinit var carTypeTv: TextView
     private lateinit var statusTextView: TextView
+    private lateinit var statsTextView: TextView
 
     private lateinit var drivebtn: Button
 
@@ -39,8 +40,9 @@ class DriveActivity : AppCompatActivity() {
         mDatabase = FirebaseDatabase.getInstance().reference
 
         nameTv = findViewById(R.id.nametxt)
-        carTypeTv = findViewById(R.id.carTypetxt)
+//        carTypeTv = findViewById(R.id.carTypetxt)
         statusTextView = findViewById(R.id.statusTextView)
+        statsTextView = findViewById(R.id.stats)
 
         drivebtn = findViewById(R.id.driveButton)
 
@@ -63,7 +65,7 @@ class DriveActivity : AppCompatActivity() {
                 if (snapshot.exists()) {
                     user = snapshot.getValue(User::class.java) ?: return
                     nameTv.append("Hello " + user.getFullName())
-                    carTypeTv.append("Your car is  ${user.getCarType()} obd: ${user.getConnected_obd()}")
+//                    carTypeTv.append("Your car is  ${user.getCarType()} obd: ${user.getConnected_obd()}")
                     Toast.makeText(this@DriveActivity,"User data loaded", Toast.LENGTH_SHORT).show()
                     //Start listening for status updates
                     statusListener()
@@ -150,8 +152,11 @@ class DriveActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val obdStatus = snapshot.getValue(String::class.java)
                 if (obdStatus != null) {
-                    val txt = "You are ${user.getStatus()}\nOBD ID: ${user.getConnected_obd()}\nOBD status: $obdStatus"
-                    statusTextView.text = txt
+                    val txt = "You are ${user.getStatus()}\nOBD ID: ${user.getConnected_obd()}"
+                    statsTextView.text = txt
+                    val statusTxt = "OBD status: $obdStatus"
+                    updateStatus(obdStatus)
+//                    statusTextView.text = statusTxt
                 }
             }
 
@@ -159,6 +164,49 @@ class DriveActivity : AppCompatActivity() {
                 Toast.makeText(this@DriveActivity, "Failed to load status: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+    private fun updateStatus(status: String) {
+        when {
+            status.equals("start", ignoreCase = true) -> {
+                statusTextView.text = status
+                statusTextView.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.start_icon,
+                    0,
+                    0,
+                    0
+                )
+            }
+
+            status.equals("stop", ignoreCase = true) -> {
+                statusTextView.text = status
+                statusTextView.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.stop_icon,
+                    0,
+                    0,
+                    0
+                )
+            }
+
+            status.startsWith("error", ignoreCase = true) -> {
+                statusTextView.text = status
+                statusTextView.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.error,
+                    0,
+                    0,
+                    0
+                )
+            }
+
+            else -> {
+                statusTextView.text = status
+                statusTextView.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.baseline_autorenew_24,
+                    0,
+                    0,
+                    0
+                )
+            }
+        }
     }
 
 }

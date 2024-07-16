@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:id="@+id/main"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg1"
+    android:background="@drawable/login"
     tools:context=".StartActivity">
 
     <TextView
@@ -21,7 +21,7 @@
         android:layout_marginBottom="60dp"
         android:gravity="center"
         android:text="Login"
-        android:textColor="#719380"
+        android:textColor="#0A2E1A"
         android:textSize="25dp"
         android:textStyle="bold" />
 
@@ -32,7 +32,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="120dp"
         android:text="Sign Up"
-        android:textColor="#674242"
+        android:textColor="#7AC77D"
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -45,7 +45,7 @@
         android:layout_marginLeft="215dp"
         android:layout_marginTop="120dp"
         android:text="Forgot Password?"
-        android:textColor="#674242"
+        android:textColor="#7AC77D"
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="@+id/register"
@@ -69,13 +69,13 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:background="#30432E2E"
+        android:background="#30432E1E"
         android:drawableLeft="@android:drawable/ic_dialog_email"
         android:drawablePadding="10dp"
         android:hint="Email"
         android:padding="20dp"
-        android:textColor="#674242"
-        android:textColorHint="#674242"
+        android:textColor="#B18181"
+        android:textColorHint="#B18181"
 
         android:textSize="20dp" />
 
@@ -91,8 +91,8 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:padding="20dp"
-        android:textColor="#674242"
-        android:textColorHint="#674242"
+        android:textColor="#B18181"
+        android:textColorHint="#B18181"
         android:textSize="20dp" />
 
     <CheckBox
@@ -102,7 +102,7 @@
         android:layout_below="@id/password"
         android:layout_marginLeft="10dp"
         android:text="Remember me"
-        android:textColor="#674242"
+        android:textColor="#B18181"
         android:textSize="20dp" />
 
 

@@ -6,7 +6,7 @@
     android:padding="16sp"
     android:scrollbarSize="25sp"
     android:id="@+id/main"
-    android:background="@drawable/login_bg4"
+    android:background="@drawable/backg"
     tools:context=".RegisterActivity">
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_margin="60dp"
             android:gravity="center"
             android:text="Register"
-            android:textColor="#719380"
+            android:textColor="#5BB884"
             android:textSize="25dp"
             android:textStyle="bold" />
 
@@ -39,8 +39,8 @@
             android:hint="Full Name"
             android:padding="20dp"
             android:background="#30432E2E"
-            android:textColor="#674242"
-            android:textColorHint="#674242"
+            android:textColor="#B18181"
+            android:textColorHint="#B18181"
             android:textSize="20dp" />
 
         <EditText
@@ -57,8 +57,8 @@
             android:drawablePadding="10dp"
             android:hint="Email"
             android:padding="20dp"
-            android:textColor="#674242"
-            android:textColorHint="#674242"
+            android:textColor="#B18181"
+            android:textColorHint="#B18181"
             android:textSize="20dp" />
 
         <EditText
@@ -72,8 +72,8 @@
             android:drawablePadding="10dp"
             android:hint="Password"
             android:padding="20dp"
-            android:textColor="#674242"
-            android:textColorHint="#674242"
+            android:textColor="#B18181"
+            android:textColorHint="#B18181"
             android:inputType="textPassword"
             android:textSize="20dp" />
 
@@ -88,8 +88,8 @@
             android:drawablePadding="10dp"
             android:hint="Birth Date (dd/mm/yyyy)"
             android:padding="20dp"
-            android:textColor="#674242"
-            android:textColorHint="#674242"
+            android:textColor="#B18181"
+            android:textColorHint="#B18181"
             android:textSize="20dp" />
 
         <EditText
@@ -103,8 +103,8 @@
             android:drawablePadding="10dp"
             android:hint="Car Type"
             android:padding="20dp"
-            android:textColor="#674242"
-            android:textColorHint="#674242"
+            android:textColor="#B18181"
+            android:textColorHint="#B18181"
             android:textSize="20dp" />
 
         <TextView
@@ -115,7 +115,7 @@
             android:layout_below="@id/carType"
             android:layout_margin="30dp"
             android:text="Gender:"
-            android:textColor="#674242"
+            android:textColor="#B18181"
             android:textSize="20dp"
             />
 
@@ -139,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:text="Male"
                     android:textStyle="bold"
-                    android:textColor="#674242"
+                    android:textColor="#B18181"
                     android:textSize="20dp"
                     android:layout_below="@id/date"/>
 
@@ -148,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Female"
-                    android:textColor="#674242"
+                    android:textColor="#B18181"
                     android:textStyle="bold"
                     android:textSize="20dp"
                     android:layout_below="@id/date"/>
@@ -175,7 +175,7 @@
             android:id="@+id/others"
             android:layout_above="@id/moreicons"
             android:text="or sign up with"
-            android:textColor="#674242"
+            android:textColor="#B18181"
             android:layout_centerHorizontal="true"/>
 
 

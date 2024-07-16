@@ -5,4 +5,5 @@
         <!-- Primary branding color -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="android:windowBackground">@color/white</item>
-    </style></resources>
+    </style>
+</resources>
