@@ -18,15 +18,15 @@ class ObdEntry {
     }
 
     // ---- GETTERS ---- //
-    fun getUserId(): String? {
-        return user_id
+    fun getUser_id(): String? {
+        return this.user_id
     }
 
-    fun getObdId(): String? {
-        return obd_id
+    fun getObd_id(): String? {
+        return this.obd_id
     }
 
     fun getKey(): String? {
-        return key
+        return this.key
     }
 }

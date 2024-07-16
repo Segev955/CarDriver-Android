@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backg">
+    android:background="@drawable/cardback">
 
 
     <TextView
@@ -41,16 +41,7 @@
         android:layout_below="@id/chooseObdText"
         android:layout_centerInParent="true"/>
 
-    <EditText
-        android:id="@+id/obdKeyEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="OBD key"
-        android:inputType="textPassword"
-        android:drawableLeft="@drawable/ic_baseline_password_24"
-        android:layout_below="@id/obdSpinner"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="16dp"/>
+
 
     <Button
         android:id="@+id/connectButton"
@@ -58,7 +49,7 @@
         android:layout_height="wrap_content"
         android:text="Connect"
         android:onClick="connectScript"
-        android:layout_below="@id/obdKeyEditText"
+        android:layout_below="@id/obdSpinner"
         android:layout_centerInParent="true"
         android:drawableStart="@drawable/start_icon"
         android:layout_marginBottom="16dp"/>

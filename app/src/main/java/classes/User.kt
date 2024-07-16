@@ -1,5 +1,6 @@
 package classes
 
+import android.bluetooth.BluetoothClass.Device
 import android.os.Build
 import android.text.TextUtils
 import android.util.Patterns
@@ -17,6 +18,7 @@ class User {
     private var carType: String? = null
     private var connected_obd: String =""
     private var status: String? = null
+    private var devices: MutableList<ObdEntry> = mutableListOf()
 
     constructor()
 
@@ -31,6 +33,7 @@ class User {
         this.carType = carType
         this.status = ""
         this.connected_obd = ""
+        this.devices =  mutableListOf()
     }
 
     // ---- GETTERS ---- //
@@ -62,14 +65,46 @@ class User {
         return this.status
     }
 
+    fun getdevices(): List<ObdEntry> {
+        return this.devices
+    }
+
     // ---- SETTERS ---- //
 
     fun setStatus(status: String){
         this.status = status
     }
+
     fun setConnectedObd(obd: String){
         this.connected_obd = obd
     }
+
+    // ---- DEVICES METHODS ---- //
+
+    fun addDevice(device: ObdEntry) {
+        if (devices.none { it.getObd_id() == device.getObd_id()}) {
+            devices.add(device)
+        }
+    }
+
+    fun removeDevice(id: String) {
+        val iterator = devices.iterator()
+        while (iterator.hasNext()) {
+            val device = iterator.next()
+            if (device.getObd_id() == id) {
+                iterator.remove()
+            }
+        }
+    }
+
+    fun getDeviceById(id: String): ObdEntry? {
+        return devices.find { it.getObd_id() == id }
+    }
+
+    fun deviceExists(id: String): Boolean {
+        return devices.any { it.getObd_id() == id }
+    }
+
 
 
     companion object {

@@ -67,8 +67,10 @@ class DriveActivity : AppCompatActivity() {
                     nameTv.append("Hello " + user.getFullName())
 //                    carTypeTv.append("Your car is  ${user.getCarType()} obd: ${user.getConnected_obd()}")
                     Toast.makeText(this@DriveActivity,"User data loaded", Toast.LENGTH_SHORT).show()
-                    //Start listening for status updates
+                    //Start listening for status updates from User and OBD
                     statusListener()
+                    //Start listening for busy updates from OBD
+                    obdBusyListener()
                 } else {
                     Toast.makeText(this@DriveActivity, "User data not found", Toast.LENGTH_SHORT).show()
                 }
@@ -81,17 +83,11 @@ class DriveActivity : AppCompatActivity() {
     }
 
     fun driveScript(view: View?) {
-        if(is_driving){
+        if(is_driving)
             obd_reference.child(user.getConnected_obd()).child("status").setValue("stop")
-            drivebtn.text = "Start"
-            drivebtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.start_icon, 0, 0, 0)
-        }
-        else {
+        else
             obd_reference.child(user.getConnected_obd()).child("status").setValue("start")
-            drivebtn.text = "Stop"
-            drivebtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stop_icon, 0, 0, 0)
-        }
-        is_driving = !is_driving
+
     }
 
 
@@ -165,6 +161,32 @@ class DriveActivity : AppCompatActivity() {
             }
         })
     }
+
+    fun obdBusyListener(){
+        //update start/stop switch
+        obd_reference.child(user.getConnected_obd()).child("is_busy").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val busy = snapshot.getValue(Boolean::class.java)
+                if (busy != null) {
+                    if (!busy){
+                        drivebtn.text = "Start"
+                        drivebtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.start_icon, 0, 0, 0)
+                        is_driving = false
+                    }
+                    else{
+                        drivebtn.text = "Stop"
+                        drivebtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stop_icon, 0, 0, 0)
+                        is_driving = true
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@DriveActivity, "Failed gettinf OBD busy data.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun updateStatus(status: String) {
         when {
             status.equals("start", ignoreCase = true) -> {

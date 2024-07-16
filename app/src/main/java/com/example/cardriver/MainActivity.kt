@@ -2,8 +2,10 @@ package com.example.cardriver
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import classes.*
 import com.google.firebase.auth.FirebaseAuth
@@ -23,11 +25,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var connectBtn: Button
 
     private lateinit var nameTv: TextView
-//    private lateinit var carTypeTv: TextView
+
+    //    private lateinit var carTypeTv: TextView
     private lateinit var statusTextView: TextView
 
     private lateinit var obdSpinner: Spinner
-    private lateinit var obdKeyEditText: EditText
 
     private lateinit var obdList: MutableList<String>
     private lateinit var obdMap: MutableMap<String, String>
@@ -43,10 +45,9 @@ class MainActivity : AppCompatActivity() {
 
         mDatabase = FirebaseDatabase.getInstance().reference
         nameTv = findViewById(R.id.nametxt)
-//        carTypeTv = findViewById(R.id.carTypetxt)
+        //        carTypeTv = findViewById(R.id.carTypetxt)
         statusTextView = findViewById(R.id.statusTextView)
         obdSpinner = findViewById(R.id.obdSpinner)
-        obdKeyEditText = findViewById(R.id.obdKeyEditText)
 
         obdList = mutableListOf()
         obdMap = mutableMapOf()
@@ -68,7 +69,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         obdSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 selectedObdName = obdList[position]
                 selectedObdId = obdMap[selectedObdName] ?: ""
             }
@@ -98,7 +104,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainActivity, "Failed to load OBD names: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Failed to load OBD names: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
@@ -114,54 +124,130 @@ class MainActivity : AppCompatActivity() {
                     //carTypeTv.append("Your car is  ${user.getCarType()}")
                     statusListener()
                     obdConnectionListener()
-                    Toast.makeText(this@MainActivity,"User data loaded", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "User data loaded", Toast.LENGTH_SHORT).show()
 
                 } else {
-                    Toast.makeText(this@MainActivity, "User data not found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "User data not found", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainActivity, "Failed to load user data: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Failed to load user data: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
 
-    fun statusListener(){
+    fun statusListener() {
         //status will be disconnected before starting connections.
         update_status("disconnected")
         //update user status
-        user_reference.child(userId).child("status").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val status = snapshot.getValue(String::class.java)
-                if (status != null) {
-                    user.setStatus(status)
-                    val txt = user.getStatus()
-                    statusTextView.text = txt
+        user_reference.child(userId).child("status")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val status = snapshot.getValue(String::class.java)
+                    if (status != null) {
+                        val wrongObd = extractIdFromStatus(status, "WRONGKEY")
+                        if (wrongObd != null) {
+                            user.removeDevice(wrongObd)
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Wrong key from $selectedObdName device",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            update_status("disconnected")
+                        } else {
+                            user.setStatus(status)
+                            val txt = user.getStatus()
+                            statusTextView.text = txt
+                        }
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainActivity, "Failed to load status: ${error.message}", Toast.LENGTH_SHORT).show()
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Failed to load status: ${error.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
 
-        })
+            })
 
     }
 
     fun connectScript(view: View?) {
-        enteredObdKey = obdKeyEditText.text.toString()
+        if (selectedObdId.isNotEmpty()) {
+            if (user.deviceExists(selectedObdId)) {
+                val entry = user.getDeviceById(selectedObdId)
+                mDatabase.child("ObdEntries").child(selectedObdId).setValue(entry)
+                update_status("pending for OBD $selectedObdName response")
+                Toast.makeText(
+                    this,
+                    "Trying to connect to $selectedObdName device",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val dialogView = layoutInflater.inflate(R.layout.dialog_obd_key, null)
+                val dialogEditText = dialogView.findViewById<EditText>(R.id.dialogObdKeyEditText)
+                val eyeimg = dialogView.findViewById<ImageView>(R.id.show_pass)
+                var showPass = false
+                // When the eye icon is clicked
+                eyeimg.setOnClickListener {
 
-        if (selectedObdId.isNotEmpty() && enteredObdKey.isNotEmpty()) {
-            val entry = ObdEntry(userId,selectedObdId, enteredObdKey)
-            mDatabase.child("ObdEntries").child(selectedObdId).setValue(entry)
-            update_status("pending for OBD $selectedObdName response")
-            Toast.makeText(this, "Trying to connect to ${entry.getObdId()} $selectedObdName device" , Toast.LENGTH_SHORT).show()
+                    if(showPass){
+                        dialogEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        eyeimg.setImageResource(R.drawable.not_eye_icon)
+                    }
+                    else{
+                        dialogEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        eyeimg.setImageResource(R.drawable.eye_icon)
+                    }
+                    dialogEditText.setSelection(dialogEditText.text.length) // Set the cursor to the end of the text
+                    showPass = !showPass
+                }
+                AlertDialog.Builder(this)
+                    .setTitle("Key for $selectedObdName OBD")
+                    .setView(dialogView)
+                    .setPositiveButton("OK") { dialog, _ ->
+                        enteredObdKey = dialogEditText.text.toString()
+                        if (enteredObdKey.isNotEmpty()) {
+                            val entry = ObdEntry(userId, selectedObdId, enteredObdKey)
+                            mDatabase.child("ObdEntries").child(selectedObdId).setValue(entry)
+                            user.addDevice(entry)
+                            update_status("pending for OBD $selectedObdName response")
+                            Toast.makeText(
+                                this,
+                                "Trying to connect to $selectedObdName device",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "Please enter the key",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
+            }
         } else {
-            Toast.makeText(this, "Please select an OBD device and enter the key", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Please select an OBD device",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
-
 
     private fun obdConnectionListener() {
         obdListener = object : ValueEventListener {
@@ -172,21 +258,37 @@ class MainActivity : AppCompatActivity() {
                     if (user.getConnected_obd() != "" && !isConnectedToOBD) {
                         isConnectedToOBD = true
                         startActivity(Intent(this@MainActivity, DriveActivity::class.java))
-                        Toast.makeText(this@MainActivity, "Connected to OBD successfully!", Toast.LENGTH_SHORT).show()
-                        user_reference.child(userId).child("connected_obd").removeEventListener(this)
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Connected to OBD successfully!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        user_reference.child(userId).child("connected_obd")
+                            .removeEventListener(this)
                         finish()
                     }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainActivity, "Failed to load OBD data: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Failed to load OBD data: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         user_reference.child(userId).child("connected_obd").addValueEventListener(obdListener)
     }
-    fun update_status(status: String){
-        user.setStatus("disconnected")
-        user_reference.child(userId).child("status").setValue(status)
+
+    fun update_status(status: String) {
+        user.setStatus(status)
+        user_reference.child(userId).setValue(user)
+    }
+
+    fun extractIdFromStatus(status: String, prefix: String): String? {
+        val regex = Regex(""".*?:\s*WRONGKEY:(.*)""")
+        val matchResult = regex.find(status)
+        return matchResult?.groupValues?.get(1)
     }
 }
