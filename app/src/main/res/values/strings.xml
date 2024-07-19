@@ -9,4 +9,5 @@
     <string name="start">Start</string>
     <string name="shutdown">Shutdown</string>
     <string name="disconnect">Disconnect</string>
+    <string name="logout" />
 </resources>

@@ -6,7 +6,7 @@
     android:padding="16sp"
     android:scrollbarSize="25sp"
     android:id="@+id/main"
-    android:background="@drawable/cardback"
+    android:background="@drawable/backg"
     tools:context=".RegisterActivity">
     <LinearLayout
         android:layout_width="match_parent"

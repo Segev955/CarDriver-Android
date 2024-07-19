@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cardback">
+    android:background="@drawable/backg">
 
     <TextView
         android:id="@+id/nametxt"
@@ -23,16 +24,6 @@
         android:textColor="#FD7E7E"
         android:textColorHint="#783D3D" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/carTypetxt"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Your car is "-->
-<!--        android:layout_below="@id/nametxt"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:layout_marginBottom="16dp"/>-->
-
-
     <Button
         android:id="@+id/driveButton"
         android:layout_width="wrap_content"
@@ -43,7 +34,6 @@
         android:layout_centerInParent="true"
         android:drawableStart="@drawable/start_icon"
         android:layout_marginTop="16dp"/>
-
 
     <Button
         android:id="@+id/disconnectButton"
@@ -66,7 +56,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
         android:background="#D70909"/>
-
 
     <TextView
         android:id="@+id/statusTextView"

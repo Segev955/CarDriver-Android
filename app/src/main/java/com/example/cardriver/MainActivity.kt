@@ -91,27 +91,36 @@ class MainActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 obdList.clear()
                 obdMap.clear()
+                val tempList = mutableListOf<String>()
+
                 for (obdSnapshot in snapshot.children) {
                     val obdId = obdSnapshot.key
+                    var alive = false
+                    var av = false
                     val obdName = obdSnapshot.child("name").getValue(String::class.java)
-                    val av = obdSnapshot.child("is_available").getValue(Boolean::class.java)
-                    if (av == true && obdId != null && obdName != null) {
-                        obdList.add(obdName)
+                    alive = obdSnapshot.child("is_alive").getValue(Boolean::class.java) == true
+                    av = obdSnapshot.child("is_available").getValue(Boolean::class.java) == true
+                    if (alive && av && obdId != null && obdName != null) {
+                        if (true) {
+                            obdList.add(obdName)  // Add to the beginning if in devices
+                        } else {
+                            tempList.add(obdName)  // Add to the temporary list if not in devices
+                        }
                         obdMap[obdName] = obdId
                     }
                 }
+
+                obdList.addAll(tempList)  // Append the rest of the items
                 obdAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Failed to load OBD names: ${error.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@MainActivity, "Failed to load OBD names: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
+
+
 
     private fun fetchUserData(userId: String) {
         val userRef = user_reference.child(userId)

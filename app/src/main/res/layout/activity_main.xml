@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cardback">
+    android:background="@drawable/backg">
 
 
     <TextView
@@ -14,14 +14,14 @@
         android:textColorHint="#B18181"
         android:textColor="#B18181"/>
 
-<!--    <TextView-->
-<!--        android:id="@+id/carTypetxt"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Your car is "-->
-<!--        android:layout_below="@id/nametxt"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:layout_marginBottom="16dp"/>-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/carTypetxt"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="Your car is "-->
+    <!--        android:layout_below="@id/nametxt"-->
+    <!--        android:layout_centerInParent="true"-->
+    <!--        android:layout_marginBottom="16dp"/>-->
 
     <TextView
         android:id="@+id/chooseObdText"
