@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
 
     fun statusListener() {
         //status will be disconnected before starting connections.
-        update_status("disconnected")
+        update_status("Disconnected")
         //update user status
         user_reference.child(userId).child("status")
             .addValueEventListener(object : ValueEventListener {
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
                                 "Wrong key from $selectedObdName device",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            update_status("disconnected")
+                            update_status("Disconnected")
                         } else {
                             user.setStatus(status)
                             val txt = user.getStatus()

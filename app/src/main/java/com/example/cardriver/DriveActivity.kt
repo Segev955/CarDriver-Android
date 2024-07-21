@@ -93,11 +93,11 @@ class DriveActivity : AppCompatActivity() {
 
     fun disconnectScript(view: View?) {
         if (user.getConnected_obd().isNotEmpty()) {
-            obd_reference.child(user.getConnected_obd()).child("status").setValue("disconnected")
+            obd_reference.child(user.getConnected_obd()).child("status").setValue("Disconnected")
             obd_reference.child(user.getConnected_obd()).child("connected_uid").setValue("")
             obd_reference.child(user.getConnected_obd()).child("is_available").setValue(true)
             obd_reference.child(user.getConnected_obd()).child("is_connected").setValue(false)
-            user.setStatus("disconnected")
+            user.setStatus("Disconnected")
             user.setConnectedObd("")
             user_reference.child(userId).setValue(user)
             startActivity(
@@ -117,7 +117,7 @@ class DriveActivity : AppCompatActivity() {
             user.setConnectedObd("")
         }
         //disconnect user
-        user.setStatus("disconnected")
+        user.setStatus("Disconnected")
         user_reference.child(userId).setValue(user)
         // move to main activity
         startActivity(
@@ -148,11 +148,11 @@ class DriveActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val obdStatus = snapshot.getValue(String::class.java)
                 if (obdStatus != null) {
-                    val txt = "You are ${user.getStatus()}\nOBD ID: ${user.getConnected_obd()}"
+                    val txt = "${user.getStatus()}\nOBD ID: ${user.getConnected_obd()}"
                     statsTextView.text = txt
                     val statusTxt = "OBD status: $obdStatus"
-                    updateStatus(obdStatus)
-//                    statusTextView.text = statusTxt
+//                    updateStatus(obdStatus)
+                    statusTextView.text = statusTxt
                 }
             }
 
@@ -187,7 +187,7 @@ class DriveActivity : AppCompatActivity() {
         })
     }
 
-    private fun updateStatus(status: String) {
+    /*private fun updateStatus(status: String) {
         when {
             status.equals("start", ignoreCase = true) -> {
                 statusTextView.text = status
@@ -229,6 +229,6 @@ class DriveActivity : AppCompatActivity() {
                 )
             }
         }
-    }
+    }*/
 
 }
