@@ -79,6 +79,27 @@ class User {
         this.connected_obd = obd
     }
 
+    fun setFullName(fullName: String?) {
+        this.fullName = fullName
+    }
+
+    fun setEmail(email: String?) {
+        this.email = email
+    }
+
+    fun setDate(date: String?) {
+        this.date = date
+    }
+
+    fun setGender(gender: String?) {
+        this.gender = gender
+    }
+
+    fun setCarType(carType: String?) {
+        this.carType = carType
+    }
+
+
     // ---- DEVICES METHODS ---- //
 
     fun addDevice(device: ObdEntry) {

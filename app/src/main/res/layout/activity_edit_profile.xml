@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     android:padding="16sp"
     android:scrollbarSize="25sp"
-    android:id="@+id/main"
     android:background="@drawable/backg"
-    tools:context=".RegisterActivity">
+    tools:context=".EditProfileActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,12 +14,12 @@
         android:padding="8dp"
         android:gravity="center_horizontal">
         <TextView
-            android:id="@+id/register"
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="60dp"
             android:gravity="center"
-            android:text="Register"
+            android:text="Edit Profile"
             android:textColor="#5BB884"
             android:textSize="25dp"
             android:textStyle="bold" />
@@ -34,48 +33,15 @@
             android:layout_marginTop="-30dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:background="#30432E2E"
             android:drawableLeft="@drawable/ic_baseline_person_24"
             android:drawablePadding="10dp"
             android:hint="Full Name"
             android:padding="20dp"
-            android:background="#30432E2E"
             android:textColor="#B18181"
             android:textColorHint="#B18181"
             android:textSize="20dp" />
 
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fullName"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="#30432E2E"
-            android:drawableLeft="@android:drawable/ic_dialog_email"
-            android:drawablePadding="10dp"
-            android:hint="Email"
-            android:padding="20dp"
-            android:textColor="#B18181"
-            android:textColorHint="#B18181"
-            android:textSize="20dp" />
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/email"
-            android:layout_margin="10dp"
-            android:background="#30432E2E"
-            android:drawableLeft="@drawable/ic_baseline_password_24"
-            android:drawablePadding="10dp"
-            android:hint="Password"
-            android:padding="20dp"
-            android:textColor="#B18181"
-            android:textColorHint="#B18181"
-            android:inputType="textPassword"
-            android:textSize="20dp" />
 
         <EditText
             android:id="@+id/date"
@@ -86,22 +52,7 @@
             android:background="#30432E2E"
             android:drawableLeft="@drawable/ic_baseline_date_range_24"
             android:drawablePadding="10dp"
-            android:hint="Birth Date (dd/mm/yyyy)"
-            android:padding="20dp"
-            android:textColor="#B18181"
-            android:textColorHint="#B18181"
-            android:textSize="20dp" />
-
-        <EditText
-            android:id="@+id/carType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/car_sym"
-            android:layout_below="@id/date"
-            android:layout_margin="10dp"
-            android:background="#30432E2E"
-            android:drawablePadding="10dp"
-            android:hint="Car Type"
+            android:hint="Choose Date (dd/mm/yyyy)"
             android:padding="20dp"
             android:textColor="#B18181"
             android:textColorHint="#B18181"
@@ -111,8 +62,7 @@
             android:id="@+id/gendertxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/start_icon"
-            android:layout_below="@id/carType"
+            android:layout_below="@id/date"
             android:layout_margin="30dp"
             android:text="Gender:"
             android:textColor="#B18181"
@@ -124,7 +74,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/gend"
             android:layout_below="@id/date"
-            android:layout_marginRight="60dp"
+            android:layout_marginRight="120dp"
             android:gravity="center">
 
             <RadioGroup
@@ -157,49 +107,19 @@
 
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/signup"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/gend"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
+            android:backgroundTint="@color/purple_700"
             android:textColor="#FFFFFF"
-            android:text="Sign Up"
-            android:background="@drawable/button"
+            android:text="Submit"
             android:textAllCaps="false"
             android:textSize="15dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/others"
-            android:layout_above="@id/moreicons"
-            android:text="or sign up with"
-            android:textColor="#B18181"
-            android:layout_centerHorizontal="true"/>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/moreicons"
-            android:layout_alignParentBottom="true"
-            android:gravity="center">
-
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="20dp"
-                android:src="@drawable/google"/>
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="20dp"
-                android:src="@drawable/fb"/>
-
-        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

@@ -3,13 +3,17 @@ package com.example.cardriver
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import classes.*
+import com.example.cardriver.StartActivity.Companion.SHARED_PREFS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -115,11 +119,14 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainActivity, "Failed to load OBD names: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Failed to load OBD names: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
-
 
 
     private fun fetchUserData(userId: String) {
@@ -208,12 +215,13 @@ class MainActivity : AppCompatActivity() {
                 // When the eye icon is clicked
                 eyeimg.setOnClickListener {
 
-                    if(showPass){
-                        dialogEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    if (showPass) {
+                        dialogEditText.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                         eyeimg.setImageResource(R.drawable.not_eye_icon)
-                    }
-                    else{
-                        dialogEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    } else {
+                        dialogEditText.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         eyeimg.setImageResource(R.drawable.eye_icon)
                     }
                     dialogEditText.setSelection(dialogEditText.text.length) // Set the cursor to the end of the text
@@ -299,5 +307,37 @@ class MainActivity : AppCompatActivity() {
         val regex = Regex(""".*?:\s*WRONGKEY:(.*)""")
         val matchResult = regex.find(status)
         return matchResult?.groupValues?.get(1)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            //Edit Profile button
+            R.id.action_edit_profile -> {
+                startActivity(
+                    Intent(this@MainActivity, EditProfileActivity::class.java)
+                )
+                Toast.makeText(this, "Edit Profile clicked", Toast.LENGTH_SHORT).show()
+                true
+            }
+            //LogOut button
+            R.id.action_logout -> {
+                val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("remember", "false")
+                editor.apply()
+                FirebaseAuth.getInstance().signOut()
+                startActivity(
+                    Intent(this@MainActivity, StartActivity::class.java)
+                )
+                Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

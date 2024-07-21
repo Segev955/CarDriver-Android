@@ -24,38 +24,43 @@
         android:textColor="#FD7E7E"
         android:textColorHint="#783D3D" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/driveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start"
+        android:textAllCaps="false"
+        android:background="@drawable/c_button"
         android:onClick="driveScript"
         android:layout_below="@id/stats"
         android:layout_centerInParent="true"
         android:drawableStart="@drawable/start_icon"
+
         android:layout_marginTop="16dp"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/disconnectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/disconnect"
+        android:textAllCaps="false"
         android:onClick="disconnectScript"
         android:layout_below="@id/driveButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:background="#D70909"/>
+        android:background="@drawable/red_button" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/shutdownButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/shutdown"
+        android:textAllCaps="false"
         android:onClick="shutdownScript"
         android:layout_below="@id/disconnectButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:background="#D70909"/>
+        android:background="@drawable/red_button"
+        android:layout_marginTop="25dp" />
 
     <TextView
         android:id="@+id/statusTextView"
