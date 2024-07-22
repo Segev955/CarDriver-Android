@@ -13,7 +13,20 @@
           "package_name": "com.example.cardriver"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "759661383814-1g2lsgclq5d8875iin5cc79j7gdkegpm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cardriver",
+            "certificate_hash": "4b7e96f083c1fe0ae01b86f01c7f8c31aec7757f"
+          }
+        },
+        {
+          "client_id": "759661383814-1h0g82rsph2haabhtjl1pnllkcug4c22.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDkVbPRYY6YugR4vsagP68RlElosR6fD7g"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759661383814-1h0g82rsph2haabhtjl1pnllkcug4c22.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

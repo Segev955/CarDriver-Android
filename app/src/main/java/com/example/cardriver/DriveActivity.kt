@@ -2,13 +2,17 @@ package com.example.cardriver
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import classes.ObdEntry
 import classes.User
+import com.example.cardriver.StartActivity.Companion.SHARED_PREFS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -185,6 +189,50 @@ class DriveActivity : AppCompatActivity() {
                 Toast.makeText(this@DriveActivity, "Failed gettinf OBD busy data.", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            //Edit Profile button
+            R.id.action_edit_profile -> {
+                startActivity(
+                    Intent(this@DriveActivity, EditProfileActivity::class.java)
+                )
+                Toast.makeText(this, "Edit Profile clicked", Toast.LENGTH_SHORT).show()
+                true
+            }
+            //LogOut button
+            R.id.action_logout -> {
+                val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("remember", "false")
+                editor.apply()
+                FirebaseAuth.getInstance().signOut()
+                startActivity(
+                    Intent(this@DriveActivity, StartActivity::class.java)
+                )
+                Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.action_keep_screen_on -> {
+                // Handle Keep Screen On toggle
+                item.isChecked = !item.isChecked
+                val windowLayoutParams = window.attributes
+                if (item.isChecked) {
+                    windowLayoutParams.flags = windowLayoutParams.flags or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                } else {
+                    windowLayoutParams.flags = windowLayoutParams.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON.inv()
+                }
+                window.attributes = windowLayoutParams
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     /*private fun updateStatus(status: String) {

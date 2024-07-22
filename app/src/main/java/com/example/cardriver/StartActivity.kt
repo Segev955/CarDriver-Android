@@ -6,6 +6,7 @@ import android.os.Handler
 import android.text.TextUtils
 import android.util.Patterns
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import classes.User
@@ -39,6 +40,10 @@ class StartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
+
+        val windowLayoutParams = window.attributes
+        windowLayoutParams.flags = windowLayoutParams.flags or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+        window.attributes = windowLayoutParams
 
         textEmail = findViewById(R.id.email)
         textPassword = findViewById(R.id.password)

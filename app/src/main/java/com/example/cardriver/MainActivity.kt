@@ -6,6 +6,7 @@ import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -334,6 +335,18 @@ class MainActivity : AppCompatActivity() {
                     Intent(this@MainActivity, StartActivity::class.java)
                 )
                 Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.action_keep_screen_on -> {
+                // Handle Keep Screen On toggle
+                item.isChecked = !item.isChecked
+                val windowLayoutParams = window.attributes
+                if (item.isChecked) {
+                    windowLayoutParams.flags = windowLayoutParams.flags or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                } else {
+                    windowLayoutParams.flags = windowLayoutParams.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON.inv()
+                }
+                window.attributes = windowLayoutParams
                 true
             }
 

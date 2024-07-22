@@ -11,6 +11,8 @@
     android:background="@drawable/login"
     tools:context=".StartActivity">
 
+
+
     <TextView
         android:id="@+id/login"
         android:layout_width="match_parent"
