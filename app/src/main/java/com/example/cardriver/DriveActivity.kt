@@ -7,9 +7,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.transition.Visibility
 import classes.ObdEntry
 import classes.User
 import com.example.cardriver.StartActivity.Companion.SHARED_PREFS
@@ -28,9 +30,11 @@ class DriveActivity : AppCompatActivity() {
     private  var is_driving = false
 
     private lateinit var nameTv: TextView
-//    private lateinit var carTypeTv: TextView
+    private lateinit var speedLimiteTv: TextView
     private lateinit var statusTextView: TextView
     private lateinit var statsTextView: TextView
+
+    private lateinit var locationimg: ImageView
 
     private lateinit var drivebtn: Button
 
@@ -47,6 +51,9 @@ class DriveActivity : AppCompatActivity() {
 //        carTypeTv = findViewById(R.id.carTypetxt)
         statusTextView = findViewById(R.id.statusTextView)
         statsTextView = findViewById(R.id.stats)
+        speedLimiteTv = findViewById(R.id.speedLimitTextView)
+
+        locationimg = findViewById(R.id.locationIcon)
 
         drivebtn = findViewById(R.id.driveButton)
 
@@ -97,11 +104,11 @@ class DriveActivity : AppCompatActivity() {
 
     fun disconnectScript(view: View?) {
         if (user.getConnected_obd().isNotEmpty()) {
-            obd_reference.child(user.getConnected_obd()).child("status").setValue("Disconnected")
-            obd_reference.child(user.getConnected_obd()).child("connected_uid").setValue("")
-            obd_reference.child(user.getConnected_obd()).child("is_available").setValue(true)
-            obd_reference.child(user.getConnected_obd()).child("is_connected").setValue(false)
-            user.setStatus("Disconnected")
+            obd_reference.child(user.getConnected_obd()).child("status").setValue("Disconnect")
+           // obd_reference.child(user.getConnected_obd()).child("connected_uid").setValue("")
+          //  obd_reference.child(user.getConnected_obd()).child("is_available").setValue(true)
+          //  obd_reference.child(user.getConnected_obd()).child("is_connected").setValue(false)
+            user.setStatus("Disconnecting")
             user.setConnectedObd("")
             user_reference.child(userId).setValue(user)
             startActivity(
@@ -164,8 +171,31 @@ class DriveActivity : AppCompatActivity() {
                 Toast.makeText(this@DriveActivity, "Failed to load status: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
-    }
 
+    //update speed limit
+    obd_reference.child(user.getConnected_obd()).child("speed_limit").addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val speed_limit = snapshot.getValue(Int::class.java)
+            if (speed_limit != null) {
+                if(speed_limit == 0){
+                    locationimg.setImageResource(R.drawable.red_location_icon)
+                    speedLimiteTv.visibility = View.GONE
+                }
+                else {
+                    locationimg.setImageResource(R.drawable.green_location_icon)
+                    speedLimiteTv.text = speed_limit.toString()
+                    speedLimiteTv.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            Toast.makeText(this@DriveActivity, "Failed to load speed limit: ${error.message}", Toast.LENGTH_SHORT).show()
+        }
+    })
+}
+
+    //update start/stop button
     fun obdBusyListener(){
         //update start/stop switch
         obd_reference.child(user.getConnected_obd()).child("is_busy").addValueEventListener(object : ValueEventListener {
