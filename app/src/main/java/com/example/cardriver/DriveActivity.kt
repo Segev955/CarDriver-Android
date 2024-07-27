@@ -172,28 +172,28 @@ class DriveActivity : AppCompatActivity() {
             }
         })
 
-    //update speed limit
-    obd_reference.child(user.getConnected_obd()).child("speed_limit").addValueEventListener(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val speed_limit = snapshot.getValue(String::class.java)
-            if (speed_limit != null) {
-                if(speed_limit.toFloat() <= 0){
-                    locationimg.setImageResource(R.drawable.red_location_icon)
-                    speedLimiteTv.visibility = View.GONE
-                }
-                else {
-                    locationimg.setImageResource(R.drawable.green_location_icon)
-                    speedLimiteTv.text = speed_limit.toString()
-                    speedLimiteTv.visibility = View.VISIBLE
+        //update speed limit
+        obd_reference.child(user.getConnected_obd()).child("speed_limit").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val speed_limit = snapshot.getValue(Int::class.java)
+                if (speed_limit != null) {
+                    if(speed_limit == 0){
+                        locationimg.setImageResource(R.drawable.red_location_icon)
+                        speedLimiteTv.visibility = View.GONE
+                    }
+                    else {
+                        locationimg.setImageResource(R.drawable.green_location_icon)
+                        speedLimiteTv.text = speed_limit.toString()
+                        speedLimiteTv.visibility = View.VISIBLE
+                    }
                 }
             }
-        }
 
-        override fun onCancelled(error: DatabaseError) {
-            Toast.makeText(this@DriveActivity, "Failed to load speed limit: ${error.message}", Toast.LENGTH_SHORT).show()
-        }
-    })
-}
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@DriveActivity, "Failed to load speed limit: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
     //update start/stop button
     fun obdBusyListener(){
