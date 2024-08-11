@@ -198,7 +198,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun connectScript(view: View?) {
-        if (selectedObdId.isNotEmpty()) {
+        if(obdList.isEmpty()) {
+            Toast.makeText(
+                this,
+                "No available OBD device",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        else if (selectedObdId.isNotEmpty()) {
             if (user.deviceExists(selectedObdId)) {
                 val entry = user.getDeviceById(selectedObdId)
                 mDatabase.child("ObdEntries").child(selectedObdId).setValue(entry)
@@ -258,7 +265,8 @@ class MainActivity : AppCompatActivity() {
                     .create()
                     .show()
             }
-        } else {
+        }
+        else {
             Toast.makeText(
                 this,
                 "Please select an OBD device",
