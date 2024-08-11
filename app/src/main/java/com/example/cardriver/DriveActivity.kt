@@ -11,12 +11,19 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Visibility
 import classes.ObdEntry
+import classes.StatusHistory
+import classes.StatusHistoryAdapter
 import classes.User
 import com.example.cardriver.StartActivity.Companion.SHARED_PREFS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DriveActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -38,6 +45,10 @@ class DriveActivity : AppCompatActivity() {
 
     private lateinit var drivebtn: Button
 
+    private lateinit var statusHistoryRecyclerView: RecyclerView
+    private lateinit var statusHistoryAdapter: StatusHistoryAdapter
+    private val statusHistoryList = mutableListOf<StatusHistory>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drive)
@@ -57,6 +68,12 @@ class DriveActivity : AppCompatActivity() {
 
         drivebtn = findViewById(R.id.driveButton)
 
+        // Initialize RecyclerView and Adapter
+        statusHistoryRecyclerView = findViewById(R.id.statusHistoryRecyclerView)
+        statusHistoryRecyclerView.layoutManager = LinearLayoutManager(this)
+        statusHistoryAdapter = StatusHistoryAdapter(statusHistoryList)
+        statusHistoryRecyclerView.adapter = statusHistoryAdapter
+        statusHistoryList.clear()
         is_driving = false
         val currentUser = auth.currentUser
         if (currentUser != null) {
@@ -82,6 +99,8 @@ class DriveActivity : AppCompatActivity() {
                     statusListener()
                     //Start listening for busy updates from OBD
                     obdBusyListener()
+                    // Display status history
+                    displayStatusHistory()
                 } else {
                     Toast.makeText(this@DriveActivity, "User data not found", Toast.LENGTH_SHORT).show()
                 }
@@ -164,6 +183,8 @@ class DriveActivity : AppCompatActivity() {
                     val statusTxt = "OBD status: $obdStatus"
 //                    updateStatus(obdStatus)
                     statusTextView.text = statusTxt
+
+                    updateStatusHistory(obdStatus)
                 }
             }
 
@@ -264,6 +285,46 @@ class DriveActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun updateStatusHistory(status: String) {
+        val timestamp = System.currentTimeMillis()
+        val statusUpdate = mapOf("status" to status, "timestamp" to timestamp)
+
+        obd_reference.child(user.getConnected_obd())
+            .child("status_history")
+            .push()
+            .setValue(statusUpdate)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Status history updated", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Failed to update status history", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun displayStatusHistory() {
+        obd_reference.child(user.getConnected_obd()).child("status_history")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+//                    statusHistoryList.clear()
+                    for (statusSnapshot in snapshot.children) {
+                        val statusHistory = statusSnapshot.getValue(StatusHistory::class.java)
+                        if (statusHistory != null) {
+                            statusHistoryList.add(statusHistory)
+                        }
+                    }
+                    statusHistoryList.sortByDescending { it.timestamp }
+                    statusHistoryAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@DriveActivity, "Failed to load status history: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+
 
     /*private fun updateStatus(status: String) {
         when {

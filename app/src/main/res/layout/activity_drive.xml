@@ -59,8 +59,9 @@
         android:background="@drawable/c_button"
         android:onClick="driveScript"
         android:layout_below="@id/stats"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:drawableStart="@drawable/start_icon"
+
         android:layout_marginTop="16dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -68,9 +69,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/driveButton"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
         android:background="@drawable/red_button"
+        android:layout_centerInParent="true"
         android:onClick="disconnectScript"
         android:text="@string/disconnect"
         android:textAllCaps="false" />
@@ -80,12 +81,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/disconnectButton"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginTop="25dp"
         android:background="@drawable/red_button"
         android:onClick="shutdownScript"
         android:text="@string/shutdown"
         android:textAllCaps="false" />
+
 
     <TextView
         android:id="@+id/statusTextView"
@@ -98,4 +100,23 @@
         android:textColor="#FD7E7E"
         android:textColorHint="#783D3D"
         android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:id="@+id/history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status history:"
+        android:layout_below="@id/statusTextView"
+        android:textSize="20dp"
+        android:textColor="#F0B4B4"
+        android:textColorHint="#783D3D"
+        android:layout_marginTop="40dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/statusHistoryRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/history"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
