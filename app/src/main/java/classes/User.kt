@@ -65,7 +65,7 @@ class User {
         return this.status
     }
 
-    fun getdevices(): List<ObdEntry> {
+    fun getDevices(): List<ObdEntry> {
         return this.devices
     }
 

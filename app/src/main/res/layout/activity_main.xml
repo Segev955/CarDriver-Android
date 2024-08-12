@@ -14,14 +14,6 @@
         android:textColorHint="#B18181"
         android:textColor="#B18181"/>
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/carTypetxt"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="Your car is "-->
-    <!--        android:layout_below="@id/nametxt"-->
-    <!--        android:layout_centerInParent="true"-->
-    <!--        android:layout_marginBottom="16dp"/>-->
 
 
     <TextView
@@ -65,6 +57,23 @@
         android:textColor="#FD7E7E"
         android:textColorHint="#783D3D"
         android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:id="@+id/devicesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your cars:"
+        android:layout_below="@id/statusTextView"
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp"
+        android:textColorHint="#783D3D"
+        android:layout_marginTop="40dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/devicesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/devicesTextView" />
 
 
 

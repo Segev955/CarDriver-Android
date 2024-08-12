@@ -1,5 +1,6 @@
 package com.example.cardriver
 
+import DeviceAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
@@ -10,11 +11,13 @@ import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import classes.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import classes.ObdEntry
+import classes.User
 import com.example.cardriver.StartActivity.Companion.SHARED_PREFS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -31,7 +34,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var nameTv: TextView
 
-    //    private lateinit var carTypeTv: TextView
+    private lateinit var devicesRv: RecyclerView
+
     private lateinit var statusTextView: TextView
 
     private lateinit var obdSpinner: Spinner
@@ -50,9 +54,12 @@ class MainActivity : AppCompatActivity() {
 
         mDatabase = FirebaseDatabase.getInstance().reference
         nameTv = findViewById(R.id.nametxt)
-        //        carTypeTv = findViewById(R.id.carTypetxt)
         statusTextView = findViewById(R.id.statusTextView)
         obdSpinner = findViewById(R.id.obdSpinner)
+        devicesRv = findViewById(R.id.devicesList)
+
+        // Initialize RecyclerView with a LayoutManager
+        devicesRv.layoutManager = LinearLayoutManager(this)
 
         obdList = mutableListOf()
         obdMap = mutableMapOf()
@@ -106,16 +113,12 @@ class MainActivity : AppCompatActivity() {
                     alive = obdSnapshot.child("is_alive").getValue(Boolean::class.java) == true
                     av = obdSnapshot.child("is_available").getValue(Boolean::class.java) == true
                     if (alive && av && obdId != null && obdName != null) {
-                        if (true) {
-                            obdList.add(obdName)  // Add to the beginning if in devices
-                        } else {
-                            tempList.add(obdName)  // Add to the temporary list if not in devices
-                        }
+                        obdList.add(obdName)
                         obdMap[obdName] = obdId
                     }
                 }
 
-                obdList.addAll(tempList)  // Append the rest of the items
+                obdList.addAll(tempList)
                 obdAdapter.notifyDataSetChanged()
             }
 
@@ -129,7 +132,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
     private fun fetchUserData(userId: String) {
         val userRef = user_reference.child(userId)
 
@@ -138,11 +140,13 @@ class MainActivity : AppCompatActivity() {
                 if (snapshot.exists()) {
                     user = snapshot.getValue(User::class.java) ?: return
                     nameTv.append("Hello " + user.getFullName())
-                    //carTypeTv.append("Your car is  ${user.getCarType()}")
+
+                    // Set the RecyclerView adapter with the correct context
+                    devicesRv.adapter = DeviceAdapter(this@MainActivity, user.getDevices())
+
                     statusListener()
                     obdConnectionListener()
                     Toast.makeText(this@MainActivity, "User data loaded", Toast.LENGTH_SHORT).show()
-
                 } else {
                     Toast.makeText(this@MainActivity, "User data not found", Toast.LENGTH_SHORT)
                         .show()
@@ -192,20 +196,17 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
             })
-
     }
 
     fun connectScript(view: View?) {
-        if(obdList.isEmpty()) {
+        if (obdList.isEmpty()) {
             Toast.makeText(
                 this,
                 "No available OBD device",
                 Toast.LENGTH_SHORT
             ).show()
-        }
-        else if (selectedObdId.isNotEmpty()) {
+        } else if (selectedObdId.isNotEmpty()) {
             if (user.deviceExists(selectedObdId)) {
                 val entry = user.getDeviceById(selectedObdId)
                 mDatabase.child("ObdEntries").child(selectedObdId).setValue(entry)
@@ -265,8 +266,7 @@ class MainActivity : AppCompatActivity() {
                     .create()
                     .show()
             }
-        }
-        else {
+        } else {
             Toast.makeText(
                 this,
                 "Please select an OBD device",
@@ -318,7 +318,8 @@ class MainActivity : AppCompatActivity() {
         return matchResult?.groupValues?.get(1)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {menuInflater.inflate(R.menu.menu_main, menu)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
