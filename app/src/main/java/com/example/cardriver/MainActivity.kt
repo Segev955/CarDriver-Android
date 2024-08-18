@@ -30,6 +30,10 @@ import com.example.cardriver.StartActivity.Companion.SHARED_PREFS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import android.Manifest
+import android.content.ContentValues.TAG
+import android.util.Log
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class MainActivity : AppCompatActivity() {
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        createNotificationChannel()
+//        createNotificationChannel()
         if (ActivityCompat.checkSelfPermission(
             applicationContext,
             Manifest.permission.POST_NOTIFICATIONS
@@ -117,6 +121,7 @@ class MainActivity : AppCompatActivity() {
                 selectedObdId = ""
             }
         }
+
     }
 
     private fun fetchObdNames() {
@@ -168,7 +173,9 @@ class MainActivity : AppCompatActivity() {
 
                     statusListener()
                     obdConnectionListener()
-                    notificationListener()
+//                    notificationListener()
+                    if (user.getFCMToken() == null || user.getFCMToken() == "")
+                        FCMToken()
 
                     Toast.makeText(this@MainActivity, "User data loaded", Toast.LENGTH_SHORT).show()
                 } else {
@@ -402,7 +409,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show()
         }
     }
-    @SuppressLint("MissingPermission")
+/*    @SuppressLint("MissingPermission")
     private fun showNotification(notificationText: String) {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground) // Replace with your icon
@@ -460,6 +467,21 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 }
             })
+    }*/
+
+    fun FCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                return@addOnCompleteListener
+            }
+
+            // Get the FCM registration token
+            val token = task.result
+            Log.d("FCM", "FCM Registration Token: $token")
+            user.setFCMToken(token)
+            user_reference.child(userId).setValue(user)
+        }
     }
 
 }

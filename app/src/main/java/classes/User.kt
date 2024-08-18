@@ -19,6 +19,7 @@ class User {
     private var connected_obd: String =""
     private var status: String? = null
     private var notification: String? = null
+    private var FCMToken: String? = null
     private var devices: MutableList<ObdEntry> = mutableListOf()
 
     constructor()
@@ -35,6 +36,7 @@ class User {
         this.status = ""
         this.notification = ""
         this.connected_obd = ""
+        this.FCMToken = ""
         this.devices =  mutableListOf()
     }
 
@@ -69,6 +71,9 @@ class User {
     fun getNotification(): String? {
         return this.notification
     }
+    fun getFCMToken(): String? {
+        return this.FCMToken
+    }
 
     fun getDevices(): List<ObdEntry> {
         return this.devices
@@ -81,6 +86,9 @@ class User {
     }
     fun setNotification(notification: String) {
         this.notification = notification
+    }
+    fun setFCMToken(FCMToken: String) {
+        this.FCMToken = FCMToken
     }
 
     fun setConnectedObd(obd: String){

@@ -39,6 +39,7 @@ class RegisterActivity : AppCompatActivity() {
         val genderRadioGroup: RadioGroup = findViewById(R.id.gender)
         val signUpButton: Button = findViewById(R.id.signup)
 
+
         signUpButton.setOnClickListener {
             val fullName = fullNameEditText.text.toString()
             val email = emailEditText.text.toString()
