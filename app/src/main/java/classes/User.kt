@@ -18,6 +18,7 @@ class User {
     private var carType: String? = null
     private var connected_obd: String =""
     private var status: String? = null
+    private var notification: String? = null
     private var devices: MutableList<ObdEntry> = mutableListOf()
 
     constructor()
@@ -32,6 +33,7 @@ class User {
         this.gender = gender
         this.carType = carType
         this.status = ""
+        this.notification = ""
         this.connected_obd = ""
         this.devices =  mutableListOf()
     }
@@ -64,6 +66,9 @@ class User {
     fun getStatus(): String? {
         return this.status
     }
+    fun getNotification(): String? {
+        return this.notification
+    }
 
     fun getDevices(): List<ObdEntry> {
         return this.devices
@@ -73,6 +78,9 @@ class User {
 
     fun setStatus(status: String){
         this.status = status
+    }
+    fun setNotification(notification: String) {
+        this.notification = notification
     }
 
     fun setConnectedObd(obd: String){

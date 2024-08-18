@@ -1,7 +1,13 @@
 package com.example.cardriver
 
 import DeviceAdapter
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.Menu
@@ -9,8 +15,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.ObdEntry
@@ -18,8 +29,11 @@ import classes.User
 import com.example.cardriver.StartActivity.Companion.SHARED_PREFS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import android.Manifest
+
 
 class MainActivity : AppCompatActivity() {
+    val CHANNEL_ID = "ch1"
     private lateinit var auth: FirebaseAuth
     private lateinit var user_reference: DatabaseReference
     private lateinit var mDatabase: DatabaseReference
@@ -51,7 +65,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        createNotificationChannel()
+        if (ActivityCompat.checkSelfPermission(
+            applicationContext,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) != PackageManager.PERMISSION_GRANTED
+            ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            return
+        }
         mDatabase = FirebaseDatabase.getInstance().reference
         nameTv = findViewById(R.id.nametxt)
         statusTextView = findViewById(R.id.statusTextView)
@@ -146,6 +168,8 @@ class MainActivity : AppCompatActivity() {
 
                     statusListener()
                     obdConnectionListener()
+                    notificationListener()
+
                     Toast.makeText(this@MainActivity, "User data loaded", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@MainActivity, "User data not found", Toast.LENGTH_SHORT)
@@ -312,6 +336,11 @@ class MainActivity : AppCompatActivity() {
         user_reference.child(userId).setValue(user)
     }
 
+    fun updateNotification(notification: String) {
+        user.setNotification(notification)
+        user_reference.child(userId).setValue(user)
+    }
+
     fun extractIdFromStatus(status: String, prefix: String): String? {
         val regex = Regex(""".*?:\s*WRONGKEY:(.*)""")
         val matchResult = regex.find(status)
@@ -362,4 +391,75 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { result: Boolean ->
+        if (result) {
+            // Permission granted, but you decide when to show a notification based on the actual notificationListener
+            Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+    @SuppressLint("MissingPermission")
+    private fun showNotification(notificationText: String) {
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // Replace with your icon
+            .setContentTitle("Someone driving your car")
+            .setContentText(notificationText)  // Use the notification text from Firebase
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        with(NotificationManagerCompat.from(this)) {
+            notify(1, builder.build())
+        }
+    }
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is not in the Support Library.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "My Channel"
+            val descriptionText = "Description of My Channel"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system.
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+    fun notificationListener() {
+        // Reset the notification text before starting connections.
+        updateNotification("None")
+
+        // Listen for notification updates from Firebase Realtime Database.
+        user_reference.child(userId).child("notification")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val notification = snapshot.getValue(String::class.java)
+                    if (notification != null) {
+                        // Update user object with the new notification.
+                        user.setNotification(notification)
+
+                        // Update the UI (statusTextView) with the new notification.
+                        statusTextView.text = notification
+
+                        // Trigger the notification to be shown.
+                        if (notification != "None")
+                            showNotification(notification)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Failed to load notification: ${error.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+    }
+
 }

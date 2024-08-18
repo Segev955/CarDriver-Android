@@ -74,7 +74,9 @@ dependencies {
     implementation(libs.firebase.analytics.ktx)
 
     // Google Sign-In dependencies
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation(libs.play.services.auth)
+    implementation (libs.firebase.messaging)
+
     implementation(libs.material.v1120)
 
     testImplementation(libs.junit)
