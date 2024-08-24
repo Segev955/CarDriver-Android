@@ -58,7 +58,7 @@ class DeviceAdapter(private val context: Context, private val devices: List<ObdE
 
     // Fetch OBD data and display
     private fun fetchDeviceData(obdId: String, holder: DeviceViewHolder) {
-        obdRef.child(obdId).addListenerForSingleValueEvent(object : ValueEventListener {
+        obdRef.child(obdId).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val obdName = dataSnapshot.child("name").value as? String ?: UNKNOWN_DEVICE
