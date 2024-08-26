@@ -10,4 +10,5 @@
     <string name="shutdown">Shutdown</string>
     <string name="disconnect">Disconnect</string>
     <string name="logout" />
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

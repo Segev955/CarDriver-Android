@@ -1,6 +1,8 @@
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -9,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -17,6 +20,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import classes.ObdEntry
 import classes.User
+import com.example.cardriver.MapActivity
 import com.example.cardriver.R
 
 class DeviceAdapter(private val context: Context, private val devices: List<ObdEntry>) :
@@ -34,7 +38,12 @@ class DeviceAdapter(private val context: Context, private val devices: List<ObdE
 
     class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val deviceNameTextView: TextView = itemView.findViewById(R.id.deviceNameTextView)
+        val locationTextView: TextView = itemView.findViewById(R.id.locationTextView)
+
+        var latitude: Double = 0.0
+        var longitude: Double = 0.0
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_device, parent, false)
@@ -52,7 +61,31 @@ class DeviceAdapter(private val context: Context, private val devices: List<ObdE
         holder.itemView.setOnClickListener {
             showDeviceDialog(device)
         }
+
+        // Add a click listener to open the map when the location is clicked
+        holder.locationTextView.setOnClickListener {
+            val intent = Intent(context, MapActivity::class.java)
+            intent.putExtra("LATITUDE", holder.latitude)
+            intent.putExtra("LONGITUDE", holder.longitude)
+            context.startActivity(intent)
+        }
+
     }
+
+
+    private fun openMap(latitude: Double, longitude: Double) {
+        val geoUri = "geo:$latitude,$longitude?q=$latitude,$longitude"
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(geoUri))
+        intent.setPackage("com.google.android.apps.maps") // You can remove this to allow other map apps
+        if (intent.resolveActivity(context.packageManager) != null) {
+            context.startActivity(intent)
+        } else {
+            Toast.makeText(context, "No map application found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+
 
     override fun getItemCount(): Int = devices.size
 
@@ -62,18 +95,32 @@ class DeviceAdapter(private val context: Context, private val devices: List<ObdE
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val obdName = dataSnapshot.child("name").value as? String ?: UNKNOWN_DEVICE
-                    var lastDriver = dataSnapshot.child("last_driver").value as? String ?: NEVER_CHECKED
+                    val lastDriver = dataSnapshot.child("last_driver").value as? String ?: NEVER_CHECKED
+                    val latitude = dataSnapshot.child("latitude").getValue(Double::class.java) ?: 0.0
+                    val longitude = dataSnapshot.child("longitude").getValue(Double::class.java) ?: 0.0
+
                     displayObdNameWithDriver(obdName, lastDriver, holder)
+
+                    // Store the latitude and longitude in the holder for later use
+                    holder.latitude = latitude
+                    holder.longitude = longitude
+
+                    // Display the location in the locationTextView
+                    holder.locationTextView.text = "Last Location: $latitude, $longitude"
                 } else {
                     holder.deviceNameTextView.text = UNKNOWN_DEVICE
+                    holder.locationTextView.text = "Last Location: Unknown"
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 holder.deviceNameTextView.text = "Error fetching name"
+                holder.locationTextView.text = "Last Location: Error"
             }
         })
     }
+
+
 
     // Display OBD name with driver information
     private fun displayObdNameWithDriver(obdName: String, lastDriver: String, holder: DeviceViewHolder) {

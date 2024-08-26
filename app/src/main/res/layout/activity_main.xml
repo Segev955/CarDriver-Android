@@ -59,11 +59,24 @@
         android:layout_marginTop="40dp"/>
 
     <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last Location:"
+        android:layout_below="@id/statusTextView"
+        android:textSize="15dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="#FD7E7E"
+        android:textColorHint="#783D3D"
+        android:layout_marginTop="40dp"/>
+
+
+    <TextView
         android:id="@+id/devicesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Your cars:"
-        android:layout_below="@id/statusTextView"
+        android:layout_below="@id/location"
         android:layout_centerHorizontal="true"
         android:textSize="20dp"
         android:textColorHint="#783D3D"
